@@ -20,8 +20,6 @@ connection.connect(function (err) {
     console.log("up and running");
     // retrieveProducts();
     retrieveProducts();
-
-
 });
 
 let masterArray = [];
@@ -45,7 +43,6 @@ function retrieveProducts() {
 }
 
 function purchaseProduct() {
-
     connection.query("SELECT product_name, stock_quantity, price FROM products", function (err, data) {
         if (err) {
             console.log(err);
@@ -57,7 +54,6 @@ function purchaseProduct() {
             }
             return choiceArray;
         }
-
         inquirer
             .prompt([{
                     name: "select",
@@ -76,21 +72,21 @@ function purchaseProduct() {
                         return false;
                     }
                 }
-                //how do I use the 
             ]).then(function (data) {
                 for (i = 0; i < masterArray.length; i++) {
                     if (data.select === masterArray[i].product_name) {
                         if (parseInt(data.quantity) <= masterArray[i].stock_quantity) {
                             console.log("please wait a moment");
                             let selectedItem = data.select;
+                            let selectedQuantity = data.quantity;
                             let updatedQuantity = masterArray[i].stock_quantity - (parseInt(data.quantity));
-                            updateDatabase(selectedItem, updatedQuantity)
+                            let salesTotal = selectedQuantity * masterArray[i].price;
+                            updateDatabase(selectedItem, updatedQuantity);
+                            console.log("Thank you for your purchase! Your total is: $" + salesTotal);
                         } else {
                             console.log("I'm sorry, we don't have that many in stock")
                         }
                     }
-
-
                 }
             })
     });
@@ -106,10 +102,7 @@ function updateDatabase(selectedItem, updatedQuantity) {
         product_name : selectedItem
     }
 ], function (err, respose) {
-        if (err) console.log(err);
-        else {
-            console.log(updatedQuantity);
-        }
+        if (err) console.log(err)
     })
     connection.end();
 }
