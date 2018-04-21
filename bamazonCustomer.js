@@ -20,7 +20,7 @@ connection.connect(function (err) {
     console.log("up and running");
     // retrieveProducts();
     retrieveProducts();
-    connection.end();
+
 
 });
 
@@ -46,58 +46,70 @@ function retrieveProducts() {
 
 function purchaseProduct() {
 
-    connection.query("SELECT product_name, stock_quantity FROM products", function (err, data) {
-            if (err) {
-                console.log(err);
+    connection.query("SELECT product_name, stock_quantity, price FROM products", function (err, data) {
+        if (err) {
+            console.log(err);
+        }
+        let choiceArray = [];
+        let choices = function () {
+            for (let i = 0; i < data.length; i++) {
+                choiceArray.push(data[i].product_name)
             }
-            let choiceArray = [];
-            let choices = function () {
-                for (let i = 0; i < data.length; i++) {
-                    choiceArray.push(data[i].product_name)
-                }
-                return choiceArray;
-            }
+            return choiceArray;
+        }
 
-            inquirer
-                .prompt([{
-                        name: "select",
-                        type: "list",
-                        message: "what product would you like to buy?",
-                        choices: choices()
-                    },
-                    {
-                        name: "quantity",
-                        type: "input",
-                        message: "Please input the amount you'd like to purchase: ",
-                        validate: function (quantity) {
-                            if (isNaN(quantity) === false) {
-                                return true;
-                            }
-                            return false;
+        inquirer
+            .prompt([{
+                    name: "select",
+                    type: "list",
+                    message: "what product would you like to buy?",
+                    choices: choices()
+                },
+                {
+                    name: "quantity",
+                    type: "input",
+                    message: "Please input the amount you'd like to purchase: ",
+                    validate: function (quantity) {
+                        if (isNaN(quantity) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                //how do I use the 
+            ]).then(function (data) {
+                for (i = 0; i < masterArray.length; i++) {
+                    if (data.select === masterArray[i].product_name) {
+                        if (parseInt(data.quantity) <= masterArray[i].stock_quantity) {
+                            console.log("please wait a moment");
+                            let selectedItem = data.select;
+                            let updatedQuantity = masterArray[i].stock_quantity - (parseInt(data.quantity));
+                            updateDatabase(selectedItem, updatedQuantity)
+                        } else {
+                            console.log("I'm sorry, we don't have that many in stock")
                         }
                     }
-                    //how do I use the 
-                ]).then(function (data) {
-                        for (i = 0; i < masterArray.length; i++) {
-                            if (data.select === masterArray[i].product_name) {
-                                if (parseInt(data.quantity) <= masterArray[i].stock_quantity) {
-                                    console.log("please wait a moment");
-                                    console.log(data.quantity);
-                                    console.log(masterArray[i].stock_quantity)
-                                } else {
-                                    console.log("I'm sorry, we don't have that many in stock")
-                                }
-                            }
-                        }
-                
-                    // console.log(stock_quantity);
 
-                    // console.log(value.quantity);
-                    // let desiredQuant = value.quantity;
-                    // if (desiredQuant < stock_quantity) {
-                    //     console.log("i")
-                    // }
-                    // });
-                })
+
+                }
+            })
     });
+}
+
+function updateDatabase(selectedItem, updatedQuantity) {
+    connection.query(
+        "UPDATE products SET ? where ?", 
+    [{
+        stock_quantity: updatedQuantity
+    },
+    {
+        product_name : selectedItem
+    }
+], function (err, respose) {
+        if (err) console.log(err);
+        else {
+            console.log(updatedQuantity);
+        }
+    })
+    connection.end();
 }
