@@ -31,7 +31,7 @@ function retrieveProducts() {
         for (var i = 0; i < res.length; i++) {
             masterArray.push(res[i]);
             console.log(
-                "id: " + res[i].item_id + " || product name: " + res[i].product_name + " || price: " + res[i].price
+                "id: " + res[i].item_id + " || product name: " + res[i].product_name + " || price: $" + res[i].price
             );
             console.log("------------------------------------------------");
         }
@@ -56,8 +56,9 @@ function purchaseProduct() {
                     name: "select",
                     type: "list",
                     message: "what product would you like to buy?",
-                    //I thought about prompting for the ID that the customer wanted to buy, but that felt unnatural
-                    //so I asked for the name of the product instead
+                    /*I thought about prompting for the ID that the customer wanted to buy, 
+                    but that felt unnatural from a customer perspective 
+                    so I asked for the name of the product instead */
                     choices: choices()
                 },
                 {
