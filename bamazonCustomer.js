@@ -56,6 +56,8 @@ function purchaseProduct() {
                     name: "select",
                     type: "list",
                     message: "what product would you like to buy?",
+                    //I thought about prompting for the ID that the customer wanted to buy, but that felt unnatural
+                    //so I asked for the name of the product instead
                     choices: choices()
                 },
                 {
