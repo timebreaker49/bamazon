@@ -31,7 +31,7 @@ function retrieveProducts() {
         for (var i = 0; i < res.length; i++) {
             masterArray.push(res[i]);
             console.log(
-                "item_id: " + res[i].item_id + " || product_name: " + res[i].product_name + res[i].price
+                "id: " + res[i].item_id + " || product name: " + res[i].product_name + " || price: " + res[i].price
             );
             console.log("------------------------------------------------");
         }
