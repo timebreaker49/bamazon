@@ -14,5 +14,5 @@ The user is then prompted for the name of the product they wish to buy.
 Upon selecting which product they'd like to buy, the customer is asked what quantity of the item they want to purchase.
 ![select quantity!](images/select_quantity.PNG "select quantity")
 
-The quantity desired is checked against the database and if there are enough available, the customer is shown the sales total, having purchased the items. 
+The quantity desired is checked against the database and if there are enough available, the customer is shown the sales total.
 ![checkout!](images/checkout.PNG "checkout")
